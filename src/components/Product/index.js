@@ -1,9 +1,9 @@
 import { Container } from './styles';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-
+import { useCartContext } from 'commom/context/Cart';
 
 function Product({
   name,
@@ -12,6 +12,8 @@ function Product({
   worth,
   unidade
 }) {
+  const { cart, addProduct } = useCartContext();
+  const productInCart = cart.find(itemFromCart => itemFromCart.id === id);
   return (
       <Container>
         <div>
@@ -29,7 +31,8 @@ function Product({
           >
             <RemoveIcon />
           </IconButton>
-          <IconButton>
+          {productInCart?.amount || 0}
+          <IconButton onClick={() => addProduct({ name, photo, id, worth })}>
             <AddIcon />
           </IconButton>
         </div>

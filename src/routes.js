@@ -3,6 +3,7 @@ import Fair from 'pages/Fair';
 import Login from 'pages/Login';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { UserProvider } from 'commom/context/User';
+import { CartProvider } from 'commom/context/Cart';
 
 function Router() {
     return (
@@ -12,13 +13,15 @@ function Router() {
                     <Route exact path="/" >
                         <Login />
                     </Route>
-                    <Route path="/fair">
-                        <Fair />
-                    </Route>
+                    <CartProvider>
+                        <Route path="/fair">
+                            <Fair />
+                        </Route>
+                    </CartProvider>
                 </UserProvider>
-                    <Route path="/cart">
-                        <Cart />
-                    </Route>
+                <Route path="/cart">
+                    <Cart />
+                </Route>
             </Switch>
         </BrowserRouter>
     )
