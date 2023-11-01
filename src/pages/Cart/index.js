@@ -2,15 +2,24 @@ import { Button, Snackbar, InputLabel } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useState } from 'react';
 import { Container, Back, TotalContainer, PaymentContainer} from './styles';
+import { useCartContext } from 'commom/context/Cart';
+import Product from 'components/Product';
 
 function Cart() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const { cart } = useCartContext();
   return (
     <Container>
       <Back />
       <h2>
         Carrinho
       </h2>
+      {cart.map(product =>(
+        <Product 
+        {...product}
+        key={product.id}
+        />
+      ))}
       <PaymentContainer>
         <InputLabel> Forma de Pagamento </InputLabel>
       </PaymentContainer>

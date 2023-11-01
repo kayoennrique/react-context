@@ -17,11 +17,11 @@ function Router() {
                         <Route path="/fair">
                             <Fair />
                         </Route>
+                        <Route path="/cart">
+                            <Cart />
+                        </Route>
                     </CartProvider>
                 </UserProvider>
-                <Route path="/cart">
-                    <Cart />
-                </Route>
             </Switch>
         </BrowserRouter>
     )
