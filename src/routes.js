@@ -4,6 +4,7 @@ import Login from 'pages/Login';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { UserProvider } from 'commom/context/User';
 import { CartProvider } from 'commom/context/Cart';
+import { PaymentProvider } from 'commom/context/Payment';
 
 function Router() {
     return (
@@ -17,9 +18,11 @@ function Router() {
                         <Route path="/fair">
                             <Fair />
                         </Route>
-                        <Route path="/cart">
-                            <Cart />
-                        </Route>
+                        <PaymentProvider>
+                            <Route path="/cart">
+                                <Cart />
+                            </Route>
+                        </PaymentProvider>
                     </CartProvider>
                 </UserProvider>
             </Switch>
