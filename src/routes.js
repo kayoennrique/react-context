@@ -15,9 +15,11 @@ function Router() {
                         <Login />
                     </Route>
                     <CartProvider>
-                        <Route path="/fair">
-                            <Fair />
-                        </Route>
+                        <PaymentProvider>
+                            <Route path="/fair">
+                                <Fair />
+                            </Route>
+                        </PaymentProvider>
                         <PaymentProvider>
                             <Route path="/cart">
                                 <Cart />

@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { usePaymentContext } from './Payment';
+import { UserContext } from './User';
 
 export const CartContext = createContext();
 CartContext.displayName = "Carrinho";
@@ -6,13 +8,16 @@ CartContext.displayName = "Carrinho";
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [quantityProduct, setQuantityProduct] = useState(0);
+    const [valueTotalCart, setValueTotalCart] = useState(0);
     return (
         <CartContext.Provider
             value={{
                 cart,
                 setCart,
                 quantityProduct,
-                setQuantityProduct
+                setQuantityProduct,
+                valueTotalCart,
+                setValueTotalCart
             }}
         >
             {children}
@@ -21,18 +26,26 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCartContext = () => {
-    const {cart, 
-        setCart, 
-        quantityProduct, 
-        setQuantityProduct 
+    const { cart,
+        setCart,
+        quantityProduct,
+        setQuantityProduct,
+        valueTotalCart,
+        setValueTotalCart
     } = useContext(CartContext);
+    const {
+      formPayment  
+    } = usePaymentContext();
+    const {
+        setBalance
+    } = useContext(UserContext);
 
     function changeQuantity(id, amount) {
         return cart.map(itemFromCart => {
             if (itemFromCart.id === id) itemFromCart.amount += amount;
             return itemFromCart;
-        })
-    };
+        });
+    }
 
     function addProduct(productNew) {
         const hasTheProduct = cart.some(itemFromCart => itemFromCart.id === productNew.id);
@@ -55,11 +68,23 @@ export const useCartContext = () => {
         setCart(changeQuantity(id, -1));
     }
 
+    function makePurchase () {
+        setCart([]);
+        setBalance(currentBalance => currentBalance - valueTotalCart);
+    }
+
     useEffect(() => {
-        const newQuantity = cart.reduce((counter, product) =>
-        counter + product.amount, 0); 
+        const { newTotal, newQuantity } = cart.reduce((counter,
+            product) => ({
+                newQuantity: counter.newQuantity + product.amount,
+                newTotal: counter.newTotal + (product.worth * product.amount)
+            }), {
+            newQuantity: 0,
+            newTotal: 0
+        });
         setQuantityProduct(newQuantity);
-    }, [cart, setQuantityProduct]);
+        setValueTotalCart(newTotal * formPayment.fees);
+    }, [cart, setQuantityProduct, setValueTotalCart, formPayment]);
 
     return {
         cart,
@@ -67,6 +92,8 @@ export const useCartContext = () => {
         addProduct,
         removeProduct,
         quantityProduct,
-        setQuantityProduct
+        setQuantityProduct,
+        valueTotalCart,
+        makePurchase
     }
 }

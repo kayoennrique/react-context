@@ -8,12 +8,16 @@ import Product from 'components/Product';
 import NavBar from './NavBar';
 import { useContext } from 'react';
 import { UserContext } from 'commom/context/User';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { Back } from 'pages/Cart/styles';
 
 
 function Fair() {
+  const history = useHistory();
   const {name, balance} = useContext(UserContext);
   return (
     <Container>
+      <Back onClick={() => history.goBack()} />
       <NavBar />
       <Header>
         <div>

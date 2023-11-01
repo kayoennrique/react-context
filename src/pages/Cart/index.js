@@ -1,17 +1,20 @@
 import { Button, Snackbar, InputLabel, Select, MenuItem } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Container, Back, TotalContainer, PaymentContainer } from './styles';
 import { useCartContext } from 'commom/context/Cart';
 import Product from 'components/Product';
 import { useHistory } from 'react-router-dom';
-import { PaymentContext, usePaymentContext } from 'commom/context/Payment';
+import { usePaymentContext } from 'commom/context/Payment';
+import { UserContext } from 'commom/context/User';
 
 function Cart() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const { cart } = useCartContext();
+  const { cart, valueTotalCart, makePurchase } = useCartContext();
+  const { balance = 0 } = useContext(UserContext);
   const { typesPayment, formPayment, changePaymentForm } = usePaymentContext();
   const history = useHistory();
+  const total = useMemo(() => balance - valueTotalCart, [balance, valueTotalCart]);
   return (
     <Container>
       <Back onClick={() => history.goBack()} />
@@ -40,21 +43,23 @@ function Cart() {
       <TotalContainer>
         <div>
           <h2>Total no Carrinho: </h2>
-          <span>R$ </span>
+          <span>R$ {valueTotalCart.toFixed(2)} </span>
         </div>
         <div>
           <h2> Saldo: </h2>
-          <span> R$ </span>
+          <span> R$ {Number(balance).toFixed(2)}</span>
         </div>
         <div>
           <h2> Saldo Total: </h2>
-          <span> R$ </span>
+          <span> R$ {total.toFixed(2)}</span>
         </div>
       </TotalContainer>
       <Button
         onClick={() => {
+          makePurchase();
           setOpenSnackbar(true);
         }}
+        disabled={total < 0 || cart.length === 0 }
         color="primary"
         variant="contained"
       >
