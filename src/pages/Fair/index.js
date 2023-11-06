@@ -8,21 +8,16 @@ import Product from 'components/Product';
 import NavBar from './NavBar';
 import { useContext } from 'react';
 import { UserContext } from 'commom/context/User';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
-import { Back } from 'pages/Cart/styles';
-
 
 function Fair() {
-  const history = useHistory();
   const {name, balance} = useContext(UserContext);
   return (
     <Container>
-      <Back onClick={() => history.goBack()} />
       <NavBar />
       <Header>
         <div>
           <h2> Olá! {name}</h2>
-          <h3> Saldo: R${balance}</h3>
+          <h3> Saldo: R${Number(balance).toFixed(2)}</h3>
         </div>
         <p>Encontre os melhores produtos orgânicos!</p>
       </Header>

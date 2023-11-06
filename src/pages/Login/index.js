@@ -36,6 +36,7 @@ function Login() {
           Saldo
         </InputLabel>
         <Input
+          
           type="number"
           value={balance}
           onChange={(event) => setBalance(event.target.value)}
